@@ -46,7 +46,7 @@ class HistoricalData:
                 logging.info(f"Trade history ({current_year}/{current_month:02d}) for {from_c} to {to_c} download")
 
     def download(self, from_c, to_c, since):
-        sleep_time = 1 * 10
+        sleep_time = 5 * 60
 
         retry = 0
         content = ""
@@ -85,7 +85,7 @@ class HistoricalData:
 
         df["price"] = pd.to_numeric(df["price"], errors='coerce')
         df["volume"] = pd.to_numeric(df["volume"], errors='coerce')
-        df["time"] = pd.to_datetime(df["time"], errors='coerce')
+        df["time"] = pd.to_datetime(df["time"] * 1000000000, errors='coerce')
         df["action"] = df["action"].astype("category")
         df["type"] = df["type"].astype("category")
 

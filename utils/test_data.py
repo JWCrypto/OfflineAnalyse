@@ -38,6 +38,13 @@ class TestHistoricalData(TestCase):
         df = d.to_dataframe(data)
 
         self.assertEqual(19, df["price"].count())
+        self.assertEqual(2013, df["time"][0].year)
+        self.assertEqual(9, df["time"][0].month)
+        self.assertEqual(10, df["time"][0].day)
+        self.assertEqual(23, df["time"][0].hour)
+        self.assertEqual(47, df["time"][0].minute)
+        self.assertEqual(11, df["time"][0].second)
+        self.assertEqual(546000, df["time"][0].microsecond)
 
     def test_download_all(self):
         d = HistoricalData()
