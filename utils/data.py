@@ -7,6 +7,8 @@ from time import sleep
 import pandas as pd
 import requests
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)-6s %(message)s')
+
 TRADE_DATA_URL = "https://api.kraken.com/0/public/Trades"
 DATA_DIR = path.join(path.dirname(path.dirname(__file__)), "data")
 
@@ -25,6 +27,8 @@ class HistoricalData:
         current_dfs = []
 
         while True:
+            logging.info(
+                f"Downloading starts for {from_c} to {to_c} trade history since {since_str}")
             df, since, since_str = self.download(from_c, to_c, since_str)
 
             current_dfs.append(df)
@@ -67,16 +71,16 @@ class HistoricalData:
 
                 return self.to_dataframe(data), datetime.fromtimestamp(since / 1000000000), since
 
-            except requests.RequestException:
+            except requests.RequestException as e:
+                logging.error(f"Encounter error while downloading, {e}")
                 retry += 1
             except KeyError:
+                logging.error(f"Encounter error while downloading, got content {content}")
                 retry += 1
                 if content['error'][0].find("Rate limit exceeded"):
+                    logging.warning(f"Sleep for {sleep_time} seconds")
                     sleep(sleep_time)
                     sleep_time *= 2
-                print(content)
-
-        logging.error("Data missing: %s" % since)
 
     @staticmethod
     def to_dataframe(data):
@@ -100,3 +104,7 @@ class HistoricalData:
                 since = max(since, int(fname.split("_")[-1][:-4]))
 
         return since
+
+    @staticmethod
+    def log():
+        logging.info("abc def")

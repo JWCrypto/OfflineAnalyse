@@ -55,3 +55,7 @@ class TestHistoricalData(TestCase):
         since = int(d.load_resume())
 
         self.assertEqual(1385912691332052251, since)
+
+    def test_log(self):
+        d = HistoricalData()
+        d.log()
