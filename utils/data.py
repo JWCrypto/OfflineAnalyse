@@ -77,7 +77,7 @@ class HistoricalData:
             except KeyError:
                 logging.error(f"Encounter error while downloading, got content {content}")
                 retry += 1
-                if content['error'][0].find("Rate limit exceeded"):
+                if content['error'][0].find("Rate limit exceeded") >= 0:
                     logging.warning(f"Sleep for {sleep_time} seconds")
                     sleep(sleep_time)
                     sleep_time += 1 * 30
