@@ -50,7 +50,7 @@ class HistoricalData:
                 logging.info(f"Trade history ({current_year}/{current_month:02d}) for {from_c} to {to_c} download")
 
     def download(self, from_c, to_c, since):
-        sleep_time = 5 * 60
+        sleep_time = 2 * 60
 
         retry = 0
         content = ""
@@ -80,7 +80,7 @@ class HistoricalData:
                 if content['error'][0].find("Rate limit exceeded"):
                     logging.warning(f"Sleep for {sleep_time} seconds")
                     sleep(sleep_time)
-                    sleep_time += 3 * 60
+                    sleep_time += 1 * 30
             except json.JSONDecodeError as err:
                 logging.exception("Unable to parse downloaded message", err)
                 retry += 1
