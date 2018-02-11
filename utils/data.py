@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)-6s %(me
 TRADE_DATA_URL = "https://api.kraken.com/0/public/Trades"
 DATA_DIR = path.join(path.dirname(path.dirname(__file__)), "data")
 
-RETRY = 15
+RETRY = 10
 
 
 class HistoricalData:
@@ -80,7 +80,10 @@ class HistoricalData:
                 if content['error'][0].find("Rate limit exceeded"):
                     logging.warning(f"Sleep for {sleep_time} seconds")
                     sleep(sleep_time)
-                    sleep_time *= 2
+                    sleep_time += 3 * 60
+            except json.JSONDecodeError as err:
+                logging.exception("Unable to parse downloaded message", err)
+                retry += 1
 
     @staticmethod
     def to_dataframe(data):
